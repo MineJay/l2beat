@@ -2,7 +2,10 @@ import { Layer2Category } from '@l2beat/config'
 import { assertUnreachable } from '@l2beat/shared-pure'
 import cx from 'classnames'
 
-import { getRowVerificationClassNames } from './getRowVerificationClassNames'
+import {
+  getStickyTableCellClassNames,
+  getTableRowClassNames,
+} from './getTableRowClassNames'
 
 interface ScalingTableEntry {
   slug: string
@@ -40,7 +43,8 @@ export function getScalingRowProps(
   }
 
   return {
-    className: getRowVerificationClassNames(entry),
+    className: getTableRowClassNames(entry),
+    stickyClassName: getStickyTableCellClassNames(entry),
     href,
     'data-slug': entry.slug,
   }

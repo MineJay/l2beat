@@ -28,6 +28,7 @@ interface SingleColumnConfig<T> {
   idHref?: SectionId
   getValue: (value: T, index: number) => ReactNode
   tooltip?: string
+  sticky?: boolean
 }
 
 export interface GroupedColumnConfig<T> {
@@ -41,7 +42,9 @@ export interface RowConfig<T> {
     value: T,
     index: number,
   ) => HTMLAttributes<HTMLTableRowElement> &
-    Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>
+    Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+      stickyClassName?: string
+    }
 }
 
 export function TableView<T>({
@@ -99,6 +102,7 @@ export function TableView<T>({
             const {
               href,
               className: rowClassName,
+              stickyClassName,
               ...rest
             } = rows?.getProps(item, i) ?? {}
             return (
@@ -106,8 +110,8 @@ export function TableView<T>({
                 key={i}
                 {...rest}
                 className={cx(
-                  'group cursor-pointer border-b border-b-gray-200 dark:border-b-gray-800',
-                  'hover:bg-black/[0.1] hover:shadow-sm dark:hover:bg-white/[0.1]',
+                  'group/table-row cursor-pointer border-b border-b-gray-200 dark:border-b-gray-800',
+                  'hover:bg-[#E4E4E4] hover:shadow-sm dark:hover:bg-[#2A292C]',
                   rowClassName,
                 )}
               >
@@ -125,6 +129,8 @@ export function TableView<T>({
                           isFirst: colIndex === 0,
                           isLast: colIndex === columnConfig.columns.length - 1,
                         }}
+                        isPartOfGroup
+                        stickyClassName={stickyClassName}
                         key={`${j}:${colIndex}`}
                       />
                     ))
@@ -137,6 +143,7 @@ export function TableView<T>({
                       href={href}
                       rowIndex={i}
                       key={j}
+                      stickyClassName={stickyClassName}
                     />
                   )
                 })}
@@ -172,6 +179,8 @@ function ColumnHeader<T>(props: {
       <th
         className={cx(
           'whitespace-pre py-2 align-bottom text-sm font-medium uppercase text-gray-500 dark:text-gray-50',
+          props.column.sticky &&
+            'sticky -left-4 z-10 bg-gradient-to-r from-white via-white via-[90%] pl-2 group-hover/table-row:bg-transparent dark:from-neutral-900 dark:via-neutral-900',
           props.column.minimalWidth && 'w-0',
           hasPaddingRight &&
             !props.groupOptions?.isLast &&
@@ -228,6 +237,8 @@ function DataCell<T>(props: {
     isFirst: boolean
     isLast: boolean
   }
+  isPartOfGroup?: boolean
+  stickyClassName?: string
 }) {
   const hasPaddingRight = !props.columnConfig.noPaddingRight
   const idHref =
@@ -240,6 +251,10 @@ function DataCell<T>(props: {
       <td
         className={cx(
           'group/data-cell h-9 md:h-14',
+          props.columnConfig.sticky &&
+            classNames('sticky -left-4 z-10 pl-2', props.stickyClassName),
+          props.isPartOfGroup &&
+            'group-hover/table-row:bg-[#D8D8D8] dark:group-hover/table-row:bg-[#3C3F43]',
           props.columnConfig.minimalWidth && 'w-0',
           props.groupOptions?.isFirst && '!pl-6',
           props.groupOptions?.isLast && '!pr-6',
@@ -297,7 +312,7 @@ function GroupedColumnsHeaders(props: { groupedColumns: GroupedColumn[] }) {
     <tr className="uppercase leading-none">
       {props.groupedColumns.map((groupedColumn, i) => {
         if (groupedColumn.type === 'single') {
-          return <th key={i} />
+          return <th key={i} className={groupedColumn.className} />
         }
         if (!groupedColumn.title) {
           return (
@@ -335,7 +350,9 @@ function EmptyRow(props: { groupedColumns: GroupedColumn[] }) {
             />
           )
         }
-        return <td className="h-4" key={i} />
+        return (
+          <td className={classNames('h-4', groupedColumn.className)} key={i} />
+        )
       })}
     </tr>
   )
@@ -349,6 +366,7 @@ type GroupedColumn =
     }
   | {
       type: 'single'
+      className?: string
     }
 
 function getGroupedColumns<T>(
@@ -378,6 +396,9 @@ function getGroupedColumns<T>(
     }
     return {
       type: 'single',
+      className: columnConfig.sticky
+        ? 'sticky -left-4 z-10 bg-gradient-to-r from-neutral-900 via-neutral-900 group-hover/table-row:bg-transparent via-[90%]'
+        : undefined,
     } as const
   })
 }

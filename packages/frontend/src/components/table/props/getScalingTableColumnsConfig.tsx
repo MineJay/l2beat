@@ -14,7 +14,6 @@ import { AnomalyIndicator } from '../../AnomalyIndicator'
 import { CanonicalIcon, ExternalIcon, InfoIcon, NativeIcon } from '../../icons'
 import { StageCell } from '../../stages/StageCell'
 import { ComingSoonCell } from '../ComingSoonCell'
-import { EthereumCell } from '../EthereumCell'
 import { IndexCell } from '../IndexCell'
 import { NumberCell } from '../NumberCell'
 import { ProjectCell } from '../ProjectCell'
@@ -28,10 +27,20 @@ export function getActiveScalingTvlColumnsConfig() {
   const columns: ColumnConfig<ScalingTvlViewEntry>[] = [
     {
       name: '#',
-      alignCenter: true,
       minimalWidth: true,
       headClassName: 'md:pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      sticky: true,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
     {
       name: 'Name',
@@ -114,8 +123,20 @@ export function getScalingDetailedTvlColumnsConfig() {
       alignCenter: true,
       minimalWidth: true,
       headClassName: 'md:pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      sticky: true,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
+
     {
       name: 'Name',
       headClassName: 'pl-8',
@@ -207,8 +228,20 @@ export function getUpcomingScalingTvlColumnsConfig() {
       alignCenter: true,
       minimalWidth: true,
       headClassName: 'md:pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      sticky: true,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
+
     {
       name: 'Name',
       headClassName: 'pl-8',
@@ -240,8 +273,20 @@ export function getArchivedScalingTvlColumnsConfig() {
       alignCenter: true,
       minimalWidth: true,
       headClassName: 'md:pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      sticky: true,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
+
     {
       name: 'Name',
       headClassName: 'pl-8',
@@ -303,7 +348,18 @@ export function getLayer3sScalingTvlColumnsConfig() {
       alignCenter: true,
       minimalWidth: true,
       headClassName: 'md:pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      sticky: true,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
     {
       name: 'Name',
@@ -345,8 +401,20 @@ export function getScalingRiskColumnsConfig() {
       alignCenter: true,
       minimalWidth: true,
       headClassName: 'md:pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      sticky: true,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
+
     {
       name: 'Name',
       headClassName: 'pl-8',
@@ -391,18 +459,24 @@ export function getScalingActivityColumnsConfig() {
       alignCenter: true,
       minimalWidth: true,
       headClassName: 'pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
+
     {
       name: 'Name',
       headClassName: 'pl-8',
       minimalWidth: true,
-      getValue: (project) =>
-        project.slug !== 'ethereum' ? (
-          <ProjectCell project={project} />
-        ) : (
-          <EthereumCell project={project} />
-        ),
+      getValue: (project) => <ProjectCell project={project} />,
     },
     {
       name: 'Past day TPS',
@@ -470,12 +544,23 @@ export function getScalingLivenessColumnsConfig() {
       name: '#',
       alignCenter: true,
       minimalWidth: true,
-      headClassName: 'pl-4',
-      getValue: (_, index) => <IndexCell index={index} className="md:pl-4" />,
+      headClassName: 'md:pl-4',
+      sticky: true,
+      getValue: (project, index) => (
+        <div className="flex gap-3">
+          <IndexCell index={index} className="md:pl-4" />
+          <div className="h-[18px] w-[18px]">
+            <img
+              src={`/icons/${project.slug}.png`}
+              alt={`${project.name} logo`}
+            />
+          </div>
+        </div>
+      ),
     },
+
     {
       name: 'Name',
-      headClassName: 'pl-8',
       minimalWidth: true,
       getValue: (project) => <ProjectCell project={project} />,
     },
